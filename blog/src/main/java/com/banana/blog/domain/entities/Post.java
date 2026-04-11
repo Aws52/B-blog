@@ -1,6 +1,8 @@
 package com.banana.blog.domain.entities;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -15,6 +17,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -58,6 +62,15 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    @Builder.Default
+    @ManyToMany
+    @JoinTable(
+        name = "post_tags",
+        joinColumns = @JoinColumn(name = "post_id"),
+        inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags = new HashSet<>(); //set instead of list to avoid duplicates
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

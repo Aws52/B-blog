@@ -1,6 +1,8 @@
 package com.banana.blog.domain.entities;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -8,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +33,10 @@ public class Tag {
 
     @Column(nullable = false, unique = true)
     private String name;
+
+    @Builder.Default
+    @ManyToMany(mappedBy = "tags") //mappedBy indicates that the Post entity owns the relationship, so we don't need to define a join table here
+    private Set<Post> posts = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
