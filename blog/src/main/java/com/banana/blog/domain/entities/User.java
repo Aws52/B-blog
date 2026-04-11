@@ -1,14 +1,18 @@
 package com.banana.blog.domain.entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -38,6 +42,9 @@ public class User {
 
     @Column(nullable = false)
     private String name;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true) // One-to-many relationship with Post entity, where the "author" field in Post is the owning side of the relationship. CascadeType.ALL ensures that all operations (persist, merge, remove, refresh) are cascaded to the related posts, and orphanRemoval = true ensures that if a post is removed from the user's posts list, it will also be removed from the database.
+    private List<Post> posts = new ArrayList<>(); // One-to-many relationship with Post entity, representing the posts authored by the user
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
