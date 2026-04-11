@@ -1,5 +1,7 @@
 package com.banana.blog.domain.entities;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -8,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +33,10 @@ public class Category {
 
     @Column(nullable = false, unique = true)
     private String name;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "category") // One-to-many relationship with Post entity, where the "category" field in Post is the owning side of the relationship. This allows us to easily retrieve all posts associated with a specific category.
+    private List<Post> posts = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
