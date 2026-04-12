@@ -9,6 +9,7 @@ import org.mapstruct.ReportingPolicy;
 
 import com.banana.blog.domain.PostStatus;
 import com.banana.blog.domain.dtos.CategoryDto;
+import com.banana.blog.domain.dtos.CreateCategoryRequest;
 import com.banana.blog.domain.entities.Category;
 import com.banana.blog.domain.entities.Post;
 
@@ -17,6 +18,8 @@ public interface CategoryMapper {
 
     @Mapping(target = "postCount", source = "posts", qualifiedByName = "calculatePostCount") // we can use this to calculate the post count from the posts list in the category entity and set it to the postCount field in the category dto
     CategoryDto toDto(Category category);
+
+    Category toEntity(CreateCategoryRequest createCategoryRequest);
 
     @Named("calculatePostCount")
     default long calculatePostCount(List<Post> posts) {

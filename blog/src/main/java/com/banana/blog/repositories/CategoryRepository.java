@@ -11,4 +11,6 @@ import com.banana.blog.domain.entities.Category;
 public interface CategoryRepository extends JpaRepository<Category, UUID> {
     @Query("SELECT c FROM Category c LEFT JOIN FETCH c.posts") // will have to send 1 query instead of 1 query for each category to get the post count
     List<Category> findAllWithPostCount();
+
+    boolean existsByNameIgnoreCase(String name);
 }
