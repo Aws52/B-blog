@@ -36,4 +36,15 @@ public class ErrorController {
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+     @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiErrorResponse> handleIllegalStateException(Exception ex) {
+        log.error("Invalid argument provided: ", ex);
+        ApiErrorResponse error = ApiErrorResponse.builder()
+                .status(HttpStatus.CONFLICT.value())
+                .message("Illegal state encountered.") //I'm not using ex.getMessage(), the message is fixed to avoid exposing internal details
+                .build(); // build() method to create an instance of ApiErrorResponse
+
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
 }
