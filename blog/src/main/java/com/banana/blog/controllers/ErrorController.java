@@ -37,7 +37,7 @@ public class ErrorController {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-     @ExceptionHandler(IllegalArgumentException.class)
+     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ApiErrorResponse> handleIllegalStateException(Exception ex) {
         log.error("Invalid argument provided: ", ex);
         ApiErrorResponse error = ApiErrorResponse.builder()
