@@ -2,6 +2,7 @@ package com.banana.blog.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -37,14 +38,25 @@ public class ErrorController {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-     @ExceptionHandler(IllegalStateException.class)
+    @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ApiErrorResponse> handleIllegalStateException(Exception ex) {
         log.error("Invalid argument provided: ", ex);
         ApiErrorResponse error = ApiErrorResponse.builder()
                 .status(HttpStatus.CONFLICT.value())
-                .message("Illegal state encountered.") //I'm not using ex.getMessage(), the message is fixed to avoid exposing internal details
-                .build(); // build() method to create an instance of ApiErrorResponse
+                .message("Illegal state encountered.")
+                .build();
 
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
+        log.error("Invalid credentials provided: ", ex);
+        ApiErrorResponse error = ApiErrorResponse.builder()
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .message("Invalid credentials provided.")
+                .build();
+
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 }
