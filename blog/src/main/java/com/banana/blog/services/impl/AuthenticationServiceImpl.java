@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.banana.blog.services.AuthenticationService;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiryMs))
                 .signWith(getSigningKey(), Jwts.SIG.HS256)
                 .compact();
+    }
+
+    @Override
+    public UserDetails validateToken(String token){
+        String username = extractUsername(token);
+        return userDetailsService.loadUserByUsername(username);
+    }
+
+    private String extractUsername(String token){
+        Claims claims = Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        return claims.getSubject();
     }
 
     private SecretKey getSigningKey() {
